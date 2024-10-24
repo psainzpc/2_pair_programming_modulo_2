@@ -1,3 +1,5 @@
+USE northwind;
+
 SELECT * FROM customers;
 /* Pedidos por empresa en UK:
 Desde las oficinas en UK nos han pedido con urgencia que realicemos una 
@@ -19,11 +21,15 @@ que nos sirva para conocer cuántos objetos ha pedido cada empresa cliente de UK
 Nos piden concretamente conocer el nombre de la empresa, el año, y la cantidad de objetos que han pedido. 
 Para ello hará falta hacer 2 joins. */
 
-SELECT customers.company_name AS nombre_empresa, customers.country, orders.order_id, orders.order_date
+SELECT customers.company_name AS nombre_empresa, year(orders.order_date) AS año, SUM(order_details.quantity) AS cantidad_objetos
 FROM customers 
 INNER JOIN orders
 ON customers.customer_id = orders.customer_id
+INNER JOIN order_details
+ON order_details.order_id = orders.order_id
 WHERE customers.country = "UK"
+GROUP BY customers.company_name, YEAR(orders.order_date);
+
 
 
 
